@@ -6,8 +6,7 @@ public enum ProductCategory {
     CAR,
     BOOK;
 
-    @Override
-    public String toString() {
+    public String toDbValue() {
         return this.name().toLowerCase();
     }
 

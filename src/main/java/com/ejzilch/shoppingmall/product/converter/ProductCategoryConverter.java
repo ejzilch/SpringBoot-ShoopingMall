@@ -9,7 +9,7 @@ import javax.persistence.Converter;
 public class ProductCategoryConverter implements AttributeConverter<ProductCategory, String> {
     @Override
     public String convertToDatabaseColumn(ProductCategory productCategory) {
-        return productCategory.toString();
+        return productCategory.toDbValue();
     }
 
     @Override
