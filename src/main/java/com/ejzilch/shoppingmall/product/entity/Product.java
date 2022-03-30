@@ -27,10 +27,8 @@ public class Product {
     private Integer stock;
     private String description;
 
-    @CreatedDate
     private Date createdDate;
 
-    @LastModifiedDate
     private Date lastModifiedDate;
 
 }
