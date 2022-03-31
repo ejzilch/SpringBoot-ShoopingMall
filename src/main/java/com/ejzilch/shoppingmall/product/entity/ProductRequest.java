@@ -12,23 +12,33 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-@Entity
-public class Product {
+@Entity(name = "product")
+@EntityListeners(AuditingEntityListener.class)
+public class ProductRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
 
+    @NotNull
     private String productName;
 
+    @NotNull
     @Convert(converter = ProductCategoryConverter.class)
     private ProductCategory category;
 
+    @NotNull
     private String imageUrl;
+
+    @NotNull
     private Integer price;
+
+    @NotNull
     private Integer stock;
+
     private String description;
 
+    @Column(updatable = false)
     @CreatedDate
     private Date createdDate;
 

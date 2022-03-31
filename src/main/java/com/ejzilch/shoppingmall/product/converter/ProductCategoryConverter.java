@@ -7,6 +7,7 @@ import javax.persistence.Converter;
 
 @Converter(autoApply = true)
 public class ProductCategoryConverter implements AttributeConverter<ProductCategory, String> {
+
     @Override
     public String convertToDatabaseColumn(ProductCategory productCategory) {
         return productCategory.toDbValue();
@@ -16,5 +17,6 @@ public class ProductCategoryConverter implements AttributeConverter<ProductCateg
     public ProductCategory convertToEntityAttribute(String dbData) {
         return ProductCategory.from(dbData);
     }
+
 }
 
