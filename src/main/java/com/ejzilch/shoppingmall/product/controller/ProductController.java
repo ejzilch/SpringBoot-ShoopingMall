@@ -5,17 +5,16 @@ import com.ejzilch.shoppingmall.product.dto.ProductQueryParams;
 import com.ejzilch.shoppingmall.product.entity.Product;
 import com.ejzilch.shoppingmall.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @RestController
 @Validated
@@ -35,26 +34,37 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> findProducts(
+    public ResponseEntity<Page<Product>> findProducts(
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "CREATED_DATE") String orderBy,
-            @RequestParam(defaultValue = "DESC") String sort
+            @RequestParam(defaultValue = "DESC") String sort,
+            @RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
+            @RequestParam(defaultValue = "3") @Min(3) @Max(20) Integer pageSize
     ) {
 
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
 
-        Pageable pageable = PageRequest.of(20, 3,
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize,
                 (sort.equalsIgnoreCase("DESC") ?
                         Sort.by(Sort.Direction.DESC, orderBy) :
                         Sort.by(Sort.Direction.ASC, orderBy)));
 
-        List<Product> productsList = productService
+
+        Page<Product> pageProductsList = productService
                 .findProducts(productQueryParams, pageable);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productsList);
+        // last page json key:last value always false, temporary solution
+        int contentSize = pageProductsList.getContent().size();
+        long total = contentSize == pageSize ?
+                contentSize : contentSize + pageSize - (contentSize % pageSize);
+
+        PageImpl<Product> response = new PageImpl<>(pageProductsList.getContent(),
+                pageable, total);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/products")

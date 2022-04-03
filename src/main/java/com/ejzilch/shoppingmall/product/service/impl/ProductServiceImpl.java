@@ -5,10 +5,9 @@ import com.ejzilch.shoppingmall.product.dto.ProductQueryParams;
 import com.ejzilch.shoppingmall.product.entity.Product;
 import com.ejzilch.shoppingmall.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -23,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findProducts(ProductQueryParams productQueryParams, Pageable pageable) {
+    public Page<Product> findProducts(ProductQueryParams productQueryParams, Pageable pageable) {
         return productRepository
                 .findProductsByCategoryAndSearch(productQueryParams, pageable);
     }
