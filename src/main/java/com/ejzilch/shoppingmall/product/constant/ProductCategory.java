@@ -4,7 +4,8 @@ public enum ProductCategory {
 
     FOOD,
     CAR,
-    BOOK;
+    BOOK,
+    UNKNOWN;
 
     public String toDbValue() {
         return this.name().toLowerCase();
