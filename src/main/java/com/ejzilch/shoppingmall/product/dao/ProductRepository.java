@@ -16,20 +16,30 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             value = "SELECT product_id, product_name, category, image_url, price," +
                     " stock, description, created_date, last_modified_date" +
                     " FROM PRODUCT p WHERE 1 = 1" +
-                    " AND if(:#{#productQueryParams.getCategory} != ''," +
-                        " p.CATEGORY = :#{#productQueryParams.getCategory?.name}, 1 = 1)" +
-                    " AND if(:#{#productQueryParams.getSearch} != ''," +
-                        " p.PRODUCT_NAME LIKE %:#{#productQueryParams.getSearch}%" +
-                        " OR p.DESCRIPTION LIKE %:#{#productQueryParams.getSearch}%, 1 = 1)" +
-                    " ORDER BY :#{#pageable}",
+                    " AND" +
+                        " CASE WHEN :#{#productQueryParams.getCategory} != ''" +
+                            " THEN p.CATEGORY = :#{#productQueryParams.getCategory?.name}" +
+                            " ELSE 1 = 1" +
+                        " END"+
+                    " AND" +
+                        " CASE WHEN :#{#productQueryParams.getSearch} != ''" +
+                            " THEN p.PRODUCT_NAME LIKE %:#{#productQueryParams.getSearch}%" +
+                            " OR p.DESCRIPTION LIKE %:#{#productQueryParams.getSearch}%" +
+                            " ELSE 1 = 1" +
+                        " END",
             countQuery = "SELECT count(*)" +
-                         " FROM PRODUCT p WHERE 1 = 1" +
-                         " AND if(:#{#productQueryParams.getCategory} != ''," +
-                            " p.CATEGORY = :#{#productQueryParams.getCategory?.name}, 1 = 1)" +
-                         " AND if(:#{#productQueryParams.getSearch} != ''," +
-                            " p.PRODUCT_NAME LIKE %:#{#productQueryParams.getSearch}%" +
-                         " OR p.DESCRIPTION LIKE %:#{#productQueryParams.getSearch}%, 1 = 1)" +
-                    " ORDER BY :#{#pageable}")
+                    " FROM PRODUCT p WHERE 1 = 1" +
+                    " AND" +
+                        " CASE WHEN :#{#productQueryParams.getCategory} != ''" +
+                            " THEN p.CATEGORY = :#{#productQueryParams.getCategory?.name}" +
+                            " ELSE 1 = 1" +
+                        " END"+
+                    " AND" +
+                        " CASE WHEN :#{#productQueryParams.getSearch} != ''" +
+                            " THEN p.PRODUCT_NAME LIKE %:#{#productQueryParams.getSearch}%" +
+                            " OR p.DESCRIPTION LIKE %:#{#productQueryParams.getSearch}%" +
+                            " ELSE 1 = 1" +
+                        " END")
     Page<Product> findProductsByCategoryAndSearch(@Param("productQueryParams") ProductQueryParams productQueryParams,
                                                   Pageable pageable);
 }

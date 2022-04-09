@@ -37,9 +37,9 @@ public class ProductController {
     public ResponseEntity<Page<Product>> findProducts(
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "CREATED_DATE") String orderBy,
+            @RequestParam(defaultValue = "CREATED_DATE") String orderByColumn,
             @RequestParam(defaultValue = "DESC") String sort,
-            @RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
+            @RequestParam(defaultValue = "1") @Min(1) Integer pageNumber,
             @RequestParam(defaultValue = "3") @Min(3) @Max(20) Integer pageSize
     ) {
 
@@ -47,10 +47,10 @@ public class ProductController {
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
 
-        Pageable pageable = PageRequest.of(pageNum - 1, pageSize,
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize,
                 (sort.equalsIgnoreCase("DESC") ?
-                        Sort.by(Sort.Direction.DESC, orderBy) :
-                        Sort.by(Sort.Direction.ASC, orderBy)));
+                        Sort.by(Sort.Direction.DESC, orderByColumn) :
+                        Sort.by(Sort.Direction.ASC, orderByColumn)));
 
 
         Page<Product> pageProductsList = productService
